@@ -25,6 +25,12 @@ class BotInformation:
     embed_color = 0x6623cc
     bot_version = ""  # gets updated on_bot_run
     github = "https://github.com/thewildofficial/Botdonis"
+    
+    # starboard.py utilities
+    reaction_threshhold = 1 # how many reactions to qualify for starring
+    audit_channel_id = Configurations.audit_channel_id
+    starboard_channel_id = Configurations.starboard_channel_id
+    star_emoji_id = Configurations.star_emoji_id
 
 intents = discord.Intents.default()
 client = commands.Bot(command_prefix=[BotInformation.prefix], intent=intents, help_command=EmbedHelpCommand())
