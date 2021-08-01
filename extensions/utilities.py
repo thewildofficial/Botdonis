@@ -8,10 +8,11 @@ class General(commands.Cog):
     def __init__(self, client):
         self.client = client
 
+
     @commands.command()
     async def info(self, ctx):
         """ 🔍 displays general information about the bot"""
-  
+
 
     @commands.Cog.listener()
     async def on_message(self, message):
@@ -20,7 +21,6 @@ class General(commands.Cog):
         if mention in message.content and message.author.id != self.client.user.id:
             await message.channel.send(f'Current command for {mention} is `{BotInformation.prefix}`')
 
-  
 def setup(client):
     client.add_cog(General(client))
 
