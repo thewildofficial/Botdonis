@@ -1,19 +1,29 @@
 import discord
+from replit import db
 from discord.ext import commands
 from bot import BotInformation
 class Starboard(commands.Cog):
   #initialize client class
     def __init__(self, client):
         self.client = client
+	# interacts with the database to update score
+    def increase_points(self, discord_id,points): 
+      discord_id = str(discord_id)
+      if discord_id in db.keys():
+            db[discord_id]["score"] = db[discord_id]["score"] + points # increases the current db score by one
+      else:
+            db[discord_id] = {"score":points}  # initializes a new score
     @commands.Cog.listener()
     async def on_reaction_add(self,reaction,user):
         # Tracks every single reaction in the server
-        if reaction.count == BotInformation.reaction_threshhold and reaction.emoji.id == BotInformation.star_emoji_id: #and not user == reaction.message.author:
+        if reaction.count == BotInformation.reaction_threshhold and reaction.emoji.id == BotInformation.star_emoji_id: #and not user == reaction.message.author and not reaction.message.author == self.client.user:
             '''
         checks if the number of reactions is  equal to the required amount
         checks if the reaction sent qualifies for the starboard
-        checks if the reacter is not the same person as the message auther
+        checks if the reacter is not the same person as the message author
+				checks if the author of the message is not the bot
         '''
+            self.increase_points(reaction.message.author.id,1)
             audit_embed=discord.Embed(title="Click to jump to message!", url= reaction.message.jump_url, color=user.roles[0].color)
             audit_embed.set_author(name = reaction.message.author.name , icon_url= reaction.message.author.avatar_url)
             audit_embed.add_field(name="message content:", value=f"{reaction.message.content}", inline=True)
@@ -27,6 +37,7 @@ class Starboard(commands.Cog):
                 # sends embed to the starred channel,and deletes the auditing message
                await self.client.get_channel(BotInformation.starboard_channel_id).send(embed=reaction.message.embeds[0])
                await reaction.message.delete()
+               self.increase_points(reaction.message.author.id,2)
             elif reaction.emoji == "❌":
                 # just deletes the audit Message
                 await reaction.message.delete()

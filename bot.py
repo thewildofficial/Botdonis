@@ -5,9 +5,6 @@ from pyfiglet import Figlet
 from datetime import datetime
 import os
 
-from config import Configurations
-
-
 class EmbedHelpCommand(commands.MinimalHelpCommand):
     """builds embed for help command"""
 
@@ -20,7 +17,7 @@ class EmbedHelpCommand(commands.MinimalHelpCommand):
 
 class BotInformation:
     # all the information used by the Cogs to be stored here
-    bot_token = Configurations.bot_token
+    bot_token = os.environ["BOT_TOKEN"]
     prefix = "$"
     embed_color = ""
     bot_version = ""  # gets updated on_bot_run
@@ -28,9 +25,9 @@ class BotInformation:
     
     # starboard.py utilities
     reaction_threshhold = 50 # how many reactions to qualify for starring
-    audit_channel_id = Configurations.audit_channel_id
-    starboard_channel_id = Configurations.starboard_channel_id
-    star_emoji_id = Configurations.star_emoji_id
+    audit_channel_id = os.environ["AUDIT_CHANNEL_ID"]
+    starboard_channel_id = os.environ["STARBOARD_CHANNEL_ID"]
+    star_emoji_id = os.environ["STAR_EMOJI_ID"]
 
 intents = discord.Intents.default()
 client = commands.Bot(command_prefix=[BotInformation.prefix], intent=intents, help_command=EmbedHelpCommand())
@@ -58,4 +55,4 @@ async def on_ready():
     print(f"\n  {client.user} is online and fully functional!")
 
 
-client.run(Configurations.bot_token)
+client.run(BotInformation.bot_token)
