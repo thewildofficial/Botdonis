@@ -15,23 +15,28 @@ class Starboard(commands.Cog):
             db[discord_id] = {"score":points}  # initializes a new score
     @commands.Cog.listener()
     async def on_reaction_add(self,reaction,user):
-        # Tracks every single reaction in the server
-        if reaction.count == BotInformation.reaction_threshhold and reaction.emoji.id == BotInformation.star_emoji_id: #and not user == reaction.message.author and not reaction.message.author == self.client.user:
+        # Tracks every single reaction in the server        
+       
+        users = await reaction.users().flatten() 
+        #if reaction.message.author in users:
+            # if the reaction author is a reacter,remove their reaction
+         #   await reaction.message.remove_reaction(self.client.get_emoji(int(BotInformation.star_emoji_id)),reaction.message.author)
+       
+        if reaction.count == BotInformation.reaction_threshhold and reaction.emoji == self.client.get_emoji(int(BotInformation.star_emoji_id)):
             '''
         checks if the number of reactions is  equal to the required amount
         checks if the reaction sent qualifies for the starboard
-        checks if the reacter is not the same person as the message author
-				checks if the author of the message is not the bot
         '''
             self.increase_points(reaction.message.author.id,1)
-            audit_embed=discord.Embed(title="Click to jump to message!", url= reaction.message.jump_url, color=user.roles[0].color)
+            audit_embed=discord.Embed(title="Click to jump to message!", url= reaction.message.jump_url, color=user.roles[len(user.roles)-1].color)
             audit_embed.set_author(name = reaction.message.author.name , icon_url= reaction.message.author.avatar_url)
             audit_embed.add_field(name="message content:", value=f"{reaction.message.content}", inline=True)
             audit_message = await self.client.get_channel(BotInformation.audit_channel_id).send(embed=audit_embed)
             for emoji in ["✅","❌"]:
                 await audit_message.add_reaction(emoji)
+        
         # Logic for the audit channel
-        if reaction.message.channel.id == BotInformation.audit_channel_id:
+        elif reaction.message.channel.id == BotInformation.audit_channel_id and not self.client.user == user:
             # checks if the reaction is coming from the auditing channel
             if reaction.emoji == "✅":
                 # sends embed to the starred channel,and deletes the auditing message

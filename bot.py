@@ -18,15 +18,15 @@ class EmbedHelpCommand(commands.MinimalHelpCommand):
 class BotInformation:
     # all the information used by the Cogs to be stored here
     bot_token = os.environ["BOT_TOKEN"]
-    prefix = "$"
+    prefix = "%"
     embed_color = ""
     bot_version = ""  # gets updated on_bot_run
     github = "https://github.com/thewildofficial/Botdonis"
     
     # starboard.py utilities
-    reaction_threshhold = 50 # how many reactions to qualify for starring
-    audit_channel_id = os.environ["AUDIT_CHANNEL_ID"]
-    starboard_channel_id = os.environ["STARBOARD_CHANNEL_ID"]
+    reaction_threshhold = 1 # how many reactions to qualify for starring
+    audit_channel_id = int(os.environ["AUDIT_CHANNEL_ID"])
+    starboard_channel_id = int(os.environ["STARBOARD_CHANNEL_ID"])
     star_emoji_id = os.environ["STAR_EMOJI_ID"]
 
 intents = discord.Intents.default()
@@ -39,7 +39,6 @@ for filename in os.listdir("extensions"):
                 client.load_extension(extname)
                 print(f" * '{extname}'  has been loaded")
             except Exception as e: print(e)
-
 # starting
 @client.event
 async def on_ready():

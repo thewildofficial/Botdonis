@@ -12,6 +12,14 @@ class General(commands.Cog):
     @commands.command()
     async def info(self, ctx):
         """ 🔍 displays general information about the bot"""
+        embed = discord.Embed(
+            description="Botdonis is a custom bot made for Hamza Ahmed's discord server.",
+            color=BotInformation.embed_color)
+        embed.set_author(name=self.client.user, url=BotInformation.github,
+                         icon_url=self.client.user.avatar_url)
+        embed.add_field(name="Version", value=BotInformation.bot_version, inline=True)
+        embed.add_field(name="Github", value=BotInformation.github, inline=True)
+        await ctx.send(embed=embed)
 
 
     @commands.Cog.listener()
