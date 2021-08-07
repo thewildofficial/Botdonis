@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 from pyfiglet import Figlet
 
+import traceback
 from datetime import datetime
 import os
 
@@ -29,16 +30,14 @@ class BotInformation:
     starboard_channel_id = int(os.environ["STARBOARD_CHANNEL_ID"])
     star_emoji_id = os.environ["STAR_EMOJI_ID"]
 
-intents = discord.Intents.default()
-client = commands.Bot(command_prefix=[BotInformation.prefix], intent=intents, help_command=EmbedHelpCommand())
-intents.members = True
+client = commands.Bot(command_prefix=[BotInformation.prefix],intents=discord.Intents.all(), help_command=EmbedHelpCommand())
 for filename in os.listdir("extensions"):
         if filename.endswith(".py"):
             try:
                 extname = f"extensions.{filename[:-3]}"
                 client.load_extension(extname)
                 print(f" * '{extname}'  has been loaded")
-            except Exception as e: print(e)
+            except Exception: traceback.print_exc() 
 # starting
 @client.event
 async def on_ready():
