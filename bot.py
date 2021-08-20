@@ -1,11 +1,13 @@
 import discord
 from discord.ext import commands
 from pyfiglet import Figlet
+from replit import db
 
 import traceback
 from datetime import datetime
 import os
 
+from extensions import coworking
 class EmbedHelpCommand(commands.MinimalHelpCommand):
     """builds embed for help command"""
 
@@ -25,11 +27,20 @@ class BotInformation:
     github = "https://github.com/thewildofficial/Botdonis"
     
     # starboard.py utilities
-    reaction_threshhold = 1 # how many reactions to qualify for starring
+    try:
+      reaction_threshhold = db["THRESHHOLD"] # how many reactions to qualify for starring
+    except Exception:
+      reaction_threshhold = 20
+      
     audit_channel_id = int(os.environ["AUDIT_CHANNEL_ID"])
     starboard_channel_id = int(os.environ["STARBOARD_CHANNEL_ID"])
     star_emoji_id = os.environ["STAR_EMOJI_ID"]
-
+    coworking_vc_id = int(os.environ["COWORKING_VC_ID"])
+    break_time = int(os.environ["BREAK_TIME"])
+    work_time = int(os.environ["WORK_TIME"])
+    coworking_channel_id = int(os.environ["COWORKING_CHANNEL_ID"])
+    coworking_role_id = int(os.environ["COWORKING_ROLE_ID"])
+    guild_id = int(os.environ["GUILD_ID"])    
 client = commands.Bot(command_prefix=[BotInformation.prefix],intents=discord.Intents.all(), help_command=EmbedHelpCommand())
 for filename in os.listdir("extensions"):
         if filename.endswith(".py"):
@@ -50,7 +61,10 @@ async def on_ready():
         activity=discord.Game(name="Delayed Gratification Grindset"),
         status=discord.Status.dnd
     )
+    await client.get_channel(BotInformation.coworking_vc_id).connect() #connects to the VC 
+  
     print(f"\n  {client.user} is online and fully functional!")
+    
 
 
 client.run(BotInformation.bot_token)
