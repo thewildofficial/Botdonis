@@ -8,15 +8,17 @@ class General(commands.Cog):
     def __init__(self, client):
         self.client = client
 
+    
     @commands.command()
     @commands.has_permissions(administrator=True)
     async def set_threshhold(self,ctx,number):
-      """ADMIN ONLY: set the number of reactions required for the starboard."""
+      """ADMIN ONLY: set the number of points required for the starboard."""
       try:
-        db["THRESHHOLD"] = int(number)
-        await ctx.send(f"Number of reactions required set to `{number}`!")
+        db["threshhold"] = int(number)
+        await ctx.send(f"Number of points required set to `{number}`!")
       except Exception:
         await ctx.send("You must input a number!")
+    
     @commands.command()
     async def info(self, ctx):
         """ 🔍 displays general information about the bot"""

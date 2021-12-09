@@ -8,15 +8,17 @@ class Leaderboard(commands.Cog):
         self.client = client 
     @commands.command(aliases=["lb"])
     async def leaderboard(self, ctx):
+      vc_lb = {}
       raw_lb = {}
       for key in db:
         try:
-          int(key) # if key is not int, this should through an exception
+          key = ''.join(x for x in key if x.isdigit())
+          key = int(key) # if key is not int, this should through an exception
           raw_lb[key] = db[key]["score"]
         except Exception as e: pass
       sorted_lb = {k: v for k, v in sorted(raw_lb.items(), key=lambda x: x[1],reverse=True)}
       
-      lb_embed = discord.Embed(title="Current Leaderboard", description=f"rankings based on how valuable messages made by users are. \n level up by posting more meaningful content around the server and accumulating as many <:{self.client.get_emoji(int(BotInformation.star_emoji_id)).name}:{BotInformation.star_emoji_id}> emotes on your posts!", color= BotInformation.embed_color)
+      lb_embed = discord.Embed(title="Star Leaderboard", description=f"rankings based on how valuable messages made by users are. \n level up by posting more meaningful content around the server and accumulating as many <:{self.client.get_emoji(int(BotInformation.star_emoji_id)).name}:{BotInformation.star_emoji_id}> emotes on your posts!", color= BotInformation.embed_color)
       lb_embed.set_thumbnail(url=ctx.guild.icon_url)
       rank = 1 #initial rank 
       is_top = False #initialize the players state 

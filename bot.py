@@ -25,14 +25,12 @@ class BotInformation:
     embed_color = ""
     bot_version = ""  # gets updated on_bot_run
     github = "https://github.com/thewildofficial/Botdonis"
+    if "threshhold" in db.keys():
+      threshhold = db["threshhold"]
+    else:
+      threshhold = 100
     
     # starboard.py utilities
-    try:
-      reaction_threshhold = db["THRESHHOLD"] # how many reactions to qualify for starring
-    except Exception:
-      reaction_threshhold = 20
-      
-    audit_channel_id = int(os.environ["AUDIT_CHANNEL_ID"])
     starboard_channel_id = int(os.environ["STARBOARD_CHANNEL_ID"])
     star_emoji_id = os.environ["STAR_EMOJI_ID"]
     coworking_vc_id = int(os.environ["COWORKING_VC_ID"])
@@ -40,7 +38,17 @@ class BotInformation:
     work_time = int(os.environ["WORK_TIME"])
     coworking_channel_id = int(os.environ["COWORKING_CHANNEL_ID"])
     coworking_role_id = int(os.environ["COWORKING_ROLE_ID"])
-    guild_id = int(os.environ["GUILD_ID"])    
+    guild_id = int(os.environ["GUILD_ID"])
+    cult_member_id = os.environ["CULT_MEMBER_ID"]    
+    rank_points = {
+                  os.environ["CULT_MEMBER_ID"]:1, # cult member
+                  "871027285468258325":2, # cult disciple
+                  "871027038633480212":3, # adonis
+                  "878554965226954782":5, # mod 
+                  "878555036660170753":10, # admin
+                  "878548685615673374":15, # Hamza
+                  }
+
 client = commands.Bot(command_prefix=[BotInformation.prefix],intents=discord.Intents.all(), help_command=EmbedHelpCommand())
 for filename in os.listdir("extensions"):
         if filename.endswith(".py"):
